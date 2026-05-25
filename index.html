@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Dokter - GitHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #121212; color: #ffffff; font-family: sans-serif; }
+        .header { background-color: #0d6efd; padding: 20px; text-align: center; font-weight: bold; font-size: 2.5rem; }
+        .clock { font-size: 2rem; color: #ffc107; text-align: center; margin-bottom: 20px; }
+        table { font-size: 1.8rem; }
+        .table-dark { --bs-table-bg: #1e1e1e; }
+        .status-praktik { color: #198754; font-weight: bold; }
+        .status-cuti { color: #dc3545; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">JADWAL PRAKTIK DOKTER HARI INI</div>
+    <div class="container-fluid mt-4">
+        <div class="clock" id="jam">--:--:--</div>
+        
+        <table class="table table-dark table-striped table-bordered text-center align-middle">
+            <thead class="table-primary text-dark">
+                <tr>
+                    <th>NAMA DOKTER</th>
+                    <th>POLIKLINIK</th>
+                    <th>JAM PRAKTIK</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody id="tabel-jadwal">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Fungsi Jam Digital
+        function tampilkanJam() {
+            var waktu = new Date();
+            var jam = waktu.getHours().toString().padStart(2, '0');
+            var menit = waktu.getMinutes().toString().padStart(2, '0');
+            var detik = waktu.getSeconds().toString().padStart(2, '0');
+            document.getElementById('jam').innerHTML = jam + ":" + menit + ":" + detik + " WIB";
+        }
+        setInterval(tampilkanJam, 1000);
+
+        // Fungsi Mengambil Data dari file JSON
+        function muatJadwal() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    let html = '';
+                    data.forEach(dokter => {
+                        let warnaStatus = (dokter.status.toLowerCase() === 'praktik') ? 'status-praktik' : 'status-cuti';
+                        html += `<tr>
+                                    <td class='text-start fw-bold'>${dokter.nama_dokter}</td>
+                                    <td>${dokter.poli}</td>
+                                    <td>${dokter.jam_praktik}</td>
+                                    <td class='${warnaStatus}'>${dokter.status.toUpperCase()}</td>
+                                 </tr>`;
+                    });
+                    document.getElementById('tabel-jadwal').innerHTML = html;
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Jalankan saat pertama kali dibuka
+        muatJadwal();
+        
+        // Refresh data otomatis setiap 10 detik tanpa me-reload halaman
+        setInterval(muatJadwal, 10000); 
+    </script>
+</body>
+</html>
