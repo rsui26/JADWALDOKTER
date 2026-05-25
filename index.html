@@ -34,7 +34,7 @@
         </table>
     </div>
 
-    <script>
+   <script>
         // Fungsi Jam Digital
         function tampilkanJam() {
             var waktu = new Date();
@@ -45,30 +45,46 @@
         }
         setInterval(tampilkanJam, 1000);
 
-        // Fungsi Mengambil Data dari file JSON
+        // GANTI LINK DI BAWAH INI DENGAN LINK CSV DARI GOOGLE SHEETS ANDA
+        const urlCSV = 'https://docs.google.com/spreadsheets/d/1q7DL1_b6EHZrlA9U8AvKoMhhFeHWByqKrAZ-R2VhYQ4/edit?usp=sharing;
+
+        // Fungsi Mengambil Data dari Google Sheets
         function muatJadwal() {
-            fetch('data.json')
-                .then(response => response.json())
-                .then(data => {
+            fetch(urlCSV)
+                .then(response => response.text())
+                .then(csvText => {
                     let html = '';
-                    data.forEach(dokter => {
-                        let warnaStatus = (dokter.status.toLowerCase() === 'praktik') ? 'status-praktik' : 'status-cuti';
-                        html += `<tr>
-                                    <td class='text-start fw-bold'>${dokter.nama_dokter}</td>
-                                    <td>${dokter.poli}</td>
-                                    <td>${dokter.jam_praktik}</td>
-                                    <td class='${warnaStatus}'>${dokter.status.toUpperCase()}</td>
-                                 </tr>`;
-                    });
+                    // Memecah baris CSV
+                    let baris = csvText.split('\n');
+                    
+                    // Mulai dari i=1 untuk melewati baris pertama (Header)
+                    for (let i = 1; i < baris.length; i++) {
+                        // Memecah kolom berdasarkan koma
+                        let kolom = baris[i].split(',');
+
+                        if (kolom.length >= 4 && kolom[0].trim() !== "") {
+                            let nama = kolom[0].replace(/"/g, '');
+                            let poli = kolom[1].replace(/"/g, '');
+                            let jam = kolom[2].replace(/"/g, '');
+                            let status = kolom[3].replace(/"/g, '').trim();
+                            
+                            let warnaStatus = (status.toLowerCase() === 'praktik') ? 'status-praktik' : 'status-cuti';
+                            
+                            html += `<tr>
+                                        <td class='text-start fw-bold'>${nama}</td>
+                                        <td>${poli}</td>
+                                        <td>${jam}</td>
+                                        <td class='${warnaStatus}'>${status.toUpperCase()}</td>
+                                     </tr>`;
+                        }
+                    }
                     document.getElementById('tabel-jadwal').innerHTML = html;
                 })
                 .catch(error => console.error('Error fetching data:', error));
         }
 
-        // Jalankan saat pertama kali dibuka
         muatJadwal();
-        
-        // Refresh data otomatis setiap 10 detik tanpa me-reload halaman
+        // Refresh data otomatis dari Google Sheets setiap 10 detik
         setInterval(muatJadwal, 10000); 
     </script>
 </body>
