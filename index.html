@@ -43,7 +43,7 @@
             var detik = waktu.getSeconds().toString().padStart(2, '0');
             document.getElementById('jam').innerHTML = jam + ":" + menit + ":" + detik + " WIB";
         }
-        setInterval(tampilkanJam, 1000);
+        setInterval(tampilkanJam, 10);
 
         // GANTI LINK DI BAWAH INI DENGAN LINK CSV DARI GOOGLE SHEETS ANDA
         const urlCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTV7W642XCaB1IfPSoBSJVI9QV8OOP5_GptwWs4eHXqW9i4450_11lLna3ytcwOfey57-005FSBDIT7/pub?output=csv";
@@ -85,7 +85,7 @@
 
         muatJadwal();
         // Refresh data otomatis dari Google Sheets setiap 10 detik
-        setInterval(muatJadwal, 10000); 
+        setInterval(muatJadwal, 10); 
     </script>
 </body>
 </html>
