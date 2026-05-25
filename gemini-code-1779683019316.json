@@ -1,0 +1,20 @@
+[
+    {
+        "nama_dokter": "dr. Andi Pratama, Sp.PD",
+        "poli": "Poli Penyakit Dalam",
+        "jam_praktik": "08:00 - 12:00",
+        "status": "Praktik"
+    },
+    {
+        "nama_dokter": "drg. Siti Aminah",
+        "poli": "Poli Gigi",
+        "jam_praktik": "09:00 - 14:00",
+        "status": "Praktik"
+    },
+    {
+        "nama_dokter": "dr. Budi Santoso, Sp.A",
+        "poli": "Poli Anak",
+        "jam_praktik": "10:00 - 15:00",
+        "status": "Cuti"
+    }
+]
